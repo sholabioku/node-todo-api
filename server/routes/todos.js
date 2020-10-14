@@ -13,4 +13,12 @@ router.post('/', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
+router.get('/', (req, res) => {
+  Todo.find()
+    .then((todos) => {
+      res.send({ todos });
+    })
+    .catch((err) => res.status(400).send(err));
+});
+
 module.exports = router;
