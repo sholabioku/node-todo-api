@@ -14,6 +14,8 @@ describe('Todos Integration testing', () => {
     {
       _id: new ObjectID(),
       text: 'Second text todo',
+      completed: true,
+      completedAt: 333,
     },
   ];
   beforeEach((done) => {
@@ -131,6 +133,38 @@ describe('Todos Integration testing', () => {
 
     it('should return 404 if non-object ids', (done) => {
       request(app).delete('/todos/123abc').expect(404).end(done);
+    });
+  });
+
+  describe('PATCH /todos/:id', () => {
+    it('should update the todo', (done) => {
+      const text = 'update text';
+      const hexId = todos[0]._id.toHexString();
+      request(app)
+        .patch(`/todos/${hexId}`)
+        .send({ text, completed: true })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.todo.text).toBe(text);
+          expect(res.body.todo.completed).toBe(true);
+          expect(typeof res.body.todo.completedAt).toBe('number');
+        })
+        .end(done);
+    });
+
+    it('should clear the completedAt if todo is not completed', (done) => {
+      const hexId = todos[1]._id.toHexString();
+      const text = 'update text';
+      request(app)
+        .patch(`/todos/${hexId}`)
+        .send({ text, completed: false })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.todo.text).toBe(text);
+          expect(res.body.todo.completed).toBe(false);
+          expect(res.body.todo.completedAt).toBeNull();
+        })
+        .end(done);
     });
   });
 });
