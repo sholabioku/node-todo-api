@@ -1,3 +1,5 @@
+require('./config/config');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -11,7 +13,7 @@ app.use(bodyParser.json());
 
 app.use('/todos', todos);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 app.listen(port, () => console.log(`Started server up on port ${port}`));
 
 module.exports = { app };
