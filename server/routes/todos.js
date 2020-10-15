@@ -36,7 +36,25 @@ router.get('/:id', (req, res) => {
 
       res.send({ todo });
     })
-    .catch((err) => res.status(400).send());
+    .catch((err) => res.status(400).send(err));
+});
+
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndDelete(id)
+    .then((todo) => {
+      if (!todo) {
+        return res.status(404).send();
+      }
+
+      res.send(todo);
+    })
+    .catch((err) => res.status(400).send(err));
 });
 
 module.exports = router;
