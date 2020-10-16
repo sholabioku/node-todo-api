@@ -4,6 +4,7 @@ const router = express.Router();
 
 const { ObjectID } = require('mongodb');
 const { Todo } = require('../models/todo');
+const validateObjectId = require('../middlewares/validateObjectId');
 
 router.post('/', (req, res) => {
   const todo = new Todo({
@@ -23,11 +24,8 @@ router.get('/', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateObjectId, (req, res) => {
   const id = req.params.id;
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
 
   Todo.findById(id)
     .then((todo) => {
@@ -40,12 +38,8 @@ router.get('/:id', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateObjectId, (req, res) => {
   const id = req.params.id;
-
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
 
   Todo.findByIdAndDelete(id)
     .then((todo) => {
@@ -58,13 +52,9 @@ router.delete('/:id', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', validateObjectId, (req, res) => {
   const id = req.params.id;
   const body = _.pick(req.body, ['text', 'completed']);
-
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
 
   if (_.isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
