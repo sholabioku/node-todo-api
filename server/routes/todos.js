@@ -7,9 +7,8 @@ const { Todo } = require('../models/todo');
 const validateObjectId = require('../middlewares/validateObjectId');
 
 router.post('/', (req, res) => {
-  const todo = new Todo({
-    text: req.body.text,
-  });
+  const body = _.pick(req.body, ['text']);
+  const todo = new Todo(body);
   todo
     .save()
     .then((doc) => res.send(doc))
