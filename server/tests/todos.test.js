@@ -4,27 +4,10 @@ const request = require('supertest');
 const { ObjectID } = require('mongodb');
 const { app } = require('./../server');
 const { Todo } = require('../models/todo');
+const { todos, populateTodos } = require('./seed/seed');
 
 describe('Todos Integration testing', () => {
-  const todos = [
-    {
-      _id: new ObjectID(),
-      text: 'First test todo',
-    },
-    {
-      _id: new ObjectID(),
-      text: 'Second text todo',
-      completed: true,
-      completedAt: 333,
-    },
-  ];
-  beforeEach((done) => {
-    Todo.deleteMany({})
-      .then(() => {
-        return Todo.insertMany(todos);
-      })
-      .then(() => done());
-  });
+  beforeEach(populateTodos);
 
   describe('POST /todos', () => {
     it('should create a new todo', (done) => {
@@ -162,7 +145,7 @@ describe('Todos Integration testing', () => {
         .expect((res) => {
           expect(res.body.todo.text).toBe(text);
           expect(res.body.todo.completed).toBe(false);
-          expect(res.body.todo.completedAt).toBeNull();
+          expect(res.body.todo.completedAt).toEqual(null);
         })
         .end(done);
     });
