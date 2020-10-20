@@ -80,6 +80,16 @@ UserSchema.statics.findByToken = function (token) {
   });
 };
 
+UserSchema.methods.removeToken = function (token) {
+  const user = this;
+
+  return user.updateOne({
+    $pull: {
+      tokens: { token },
+    },
+  });
+};
+
 UserSchema.statics.findByCredentials = function (email, password) {
   const User = this;
 
