@@ -5,28 +5,32 @@ const router = express.Router();
 const { ObjectID } = require('mongodb');
 const { Todo } = require('../models/todo');
 const validateObjectId = require('../middlewares/validateObjectId');
+const { authenticate } = require('../middlewares/authenticate');
 
-router.post('/', (req, res) => {
-  const body = _.pick(req.body, ['text']);
-  const todo = new Todo(body);
+router.post('/', authenticate, (req, res) => {
+  // const body = _.pick(req.body, ['text']);
+  const todo = new Todo({
+    text: req.body.text,
+    _creator: req.user._id,
+  });
   todo
     .save()
     .then((doc) => res.send(doc))
     .catch((err) => res.status(400).send(err));
 });
 
-router.get('/', (req, res) => {
-  Todo.find()
+router.get('/', authenticate, (req, res) => {
+  Todo.find({ _creator: req.user._id })
     .then((todos) => {
       res.send({ todos });
     })
     .catch((err) => res.status(400).send(err));
 });
 
-router.get('/:id', validateObjectId, (req, res) => {
+router.get('/:id', [authenticate, validateObjectId], (req, res) => {
   const id = req.params.id;
 
-  Todo.findById(id)
+  Todo.findOne({ _id: id, _creator: req.user._id })
     .then((todo) => {
       if (!todo) {
         return res.status(404).send();
@@ -37,10 +41,10 @@ router.get('/:id', validateObjectId, (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
-router.delete('/:id', validateObjectId, (req, res) => {
+router.delete('/:id', [authenticate, validateObjectId], (req, res) => {
   const id = req.params.id;
 
-  Todo.findByIdAndDelete(id)
+  Todo.findOneAndDelete({ _id: id, _creator: req.user._id })
     .then((todo) => {
       if (!todo) {
         return res.status(404).send();
@@ -51,7 +55,7 @@ router.delete('/:id', validateObjectId, (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
-router.patch('/:id', validateObjectId, (req, res) => {
+router.patch('/:id', [authenticate, validateObjectId], (req, res) => {
   const id = req.params.id;
   const body = _.pick(req.body, ['text', 'completed']);
 
@@ -62,7 +66,11 @@ router.patch('/:id', validateObjectId, (req, res) => {
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+  Todo.findOneAndUpdate(
+    { _id: id, _creator: req.user._id },
+    { $set: body },
+    { new: true }
+  )
     .then((todo) => {
       if (!todo) {
         return res.status(404).send();
