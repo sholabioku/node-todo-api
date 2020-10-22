@@ -123,7 +123,7 @@ describe('Todos Integration testing', () => {
 
           Todo.findById(hexId)
             .then((todo) => {
-              expect(todo).toBeNull();
+              expect(todo).toBeFalsy();
               done();
             })
             .catch((err) => done(err));
@@ -208,7 +208,7 @@ describe('Todos Integration testing', () => {
         .expect((res) => {
           expect(res.body.todo.text).toBe(text);
           expect(res.body.todo.completed).toBe(false);
-          expect(res.body.todo.completedAt).toEqual(null);
+          expect(res.body.todo.completedAt).toBeFalsy();
         })
         .end(done);
     });
