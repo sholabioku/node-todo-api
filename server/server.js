@@ -1,6 +1,7 @@
 require('./config/config');
 
 const express = require('express');
+const colors = require('colors');
 const bodyParser = require('body-parser');
 
 const { mongoose } = require('./db/mongoose');
@@ -15,6 +16,8 @@ app.use('/todos', todos);
 app.use('/users', users);
 
 const port = process.env.PORT;
-app.listen(port, () => console.log(`Started server up on port ${port}`));
+app.listen(port, () =>
+  console.log(`Started server up on port ${port}`.cyan.bold.underline)
+);
 
 module.exports = { app };
