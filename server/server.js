@@ -3,6 +3,7 @@ require('./config/config');
 const express = require('express');
 const colors = require('colors');
 const morgan = require('morgan');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(bodyParser.json());
 app.use(mongoSanitize());
+app.use(helmet());
 
 app.use('/todos', todos);
 app.use('/users', users);
