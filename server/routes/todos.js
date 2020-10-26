@@ -14,7 +14,11 @@ router.post('/', authenticate, async (req, res) => {
     });
 
     const doc = await todo.save();
-    res.send(doc);
+    res.send({
+      success: true,
+      message: `Todo created todo successfully`,
+      data: doc,
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -34,9 +38,16 @@ router.get('/:id', [authenticate, validateObjectId], async (req, res) => {
     const { id } = req.params;
     const todo = await Todo.findOne({ _id: id, _creator: req.user._id });
     if (!todo) {
-      return res.status(404).send();
+      return res.status(404).send({
+        success: false,
+        message: `Todo with id of ${req.params.id} not found`,
+      });
     }
-    res.send({ todo });
+    res.send({
+      success: true,
+      message: 'Todo fetched successfully',
+      data: todo,
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -51,10 +62,17 @@ router.delete('/:id', [authenticate, validateObjectId], async (req, res) => {
     });
 
     if (!todo) {
-      return res.status(404).send();
+      return res.status(404).send({
+        success: false,
+        message: `Todo with id of ${req.params.id} not found`,
+      });
     }
 
-    res.send({ todo });
+    res.send({
+      success: true,
+      message: 'Todo deleted successfully',
+      data: todo,
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -79,9 +97,17 @@ router.patch('/:id', [authenticate, validateObjectId], async (req, res) => {
     );
 
     if (!todo) {
-      return res.status(404).send();
+      return res.status(404).send({
+        success: false,
+        message: `Todo with id of ${req.params.id} not found`,
+      });
     }
-    res.send({ todo });
+
+    res.send({
+      success: true,
+      message: 'Todo updated successfully',
+      data: todo,
+    });
   } catch (err) {
     res.status(400).send(err);
   }

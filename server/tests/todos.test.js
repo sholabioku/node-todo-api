@@ -19,7 +19,7 @@ describe('Todos Integration testing', () => {
         .send({ text });
       expect(res.status).toBe(200);
 
-      expect(res.body.text).toBe(text);
+      expect(res.body.data.text).toBe(text);
 
       const todos = await Todo.find({ text });
       expect(todos.length).toBe(1);
@@ -53,7 +53,7 @@ describe('Todos Integration testing', () => {
         .get(`/todos/${todos[0]._id.toHexString()}`)
         .set('x-auth', users[0].tokens[0].token);
       expect(res.status).toBe(200);
-      expect(res.body.todo.text).toBe(todos[0].text);
+      expect(res.body.data.text).toBe(todos[0].text);
     });
     it('should not return todo doc created by other user', async () => {
       const res = await request(app)
@@ -84,7 +84,7 @@ describe('Todos Integration testing', () => {
         .delete(`/todos/${hexId}`)
         .set('x-auth', users[1].tokens[0].token);
       expect(res.status).toBe(200);
-      expect(res.body.todo._id).toBe(hexId);
+      expect(res.body.data._id).toBe(hexId);
 
       const todo = await Todo.findById(hexId);
       expect(todo).toBeFalsy();
@@ -127,9 +127,9 @@ describe('Todos Integration testing', () => {
         .set('x-auth', users[0].tokens[0].token)
         .send({ text, completed: true });
       expect(res.status).toBe(200);
-      expect(res.body.todo.text).toBe(text);
-      expect(res.body.todo.completed).toBe(true);
-      expect(typeof res.body.todo.completedAt).toBe('number');
+      expect(res.body.data.text).toBe(text);
+      expect(res.body.data.completed).toBe(true);
+      expect(typeof res.body.data.completedAt).toBe('number');
     });
 
     it('should not update the todo created by other user', async () => {
@@ -150,9 +150,9 @@ describe('Todos Integration testing', () => {
         .set('x-auth', users[1].tokens[0].token)
         .send({ text, completed: false });
       expect(res.status).toBe(200);
-      expect(res.body.todo.text).toBe(text);
-      expect(res.body.todo.completed).toBe(false);
-      expect(res.body.todo.completedAt).toBeFalsy();
+      expect(res.body.data.text).toBe(text);
+      expect(res.body.data.completed).toBe(false);
+      expect(res.body.data.completedAt).toBeFalsy();
     });
   });
 });
