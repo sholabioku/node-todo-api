@@ -35,8 +35,8 @@ describe('Users Integrating Testing', () => {
       expect(res.status).toBe(200);
 
       expect(res.headers['x-auth']).toBeTruthy();
-      expect(res.body._id).toBeTruthy();
-      expect(res.body.email).toBe(email);
+      expect(res.body.data._id).toBeTruthy();
+      expect(res.body.data.email).toBe(email);
 
       const user = await User.findOne({ email });
       expect(user).toBeTruthy();
