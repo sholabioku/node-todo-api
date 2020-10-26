@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server",
+    "dev": "export NODE_ENV=development || SET \"NODE_ENV=developent \" &&  nodemon server/server",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
     "test-watch": "nodemon --exec 'npm test'"
   },
@@ -24,6 +25,7 @@
     "lodash": "^4.17.20",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.9",
+    "morgan": "^1.10.0",
     "validator": "^13.1.17"
   },
   "devDependencies": {
