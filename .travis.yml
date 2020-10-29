@@ -1,26 +1,23 @@
 language: node_js
-env:
-  global:
-    - CC_TEST_REPORTER_ID=c4135e27bedc02ce514005983ae51f418568c8c7005ada07f18b9c955b88565f
-    - NODE_ENV=test
-matrix:
-  include:
-    - node_js: "14"
+node_js:
+  - "stable"
 cache:
   directories:
-    - node_modules
+    - "node_modules"
 install:
   - npm install
 services:
   - mongodb
-after_success: npm run coverage
+
+env:
+  global:
+    - NODE_ENV=test
+
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
   - sleep 15
   - mongo todoAppTest --eval 'db.createUser({user:"bilush",pwd:"test",roles:["readWrite"]});'
+
 script:
   - npm test
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESUL
+after_success:
+  - npm run coverage
