@@ -1,12 +1,12 @@
-const _ = require('lodash');
-const express = require('express');
+const _ = require("lodash");
+const express = require("express");
 const router = express.Router();
 
-const { Todo } = require('../models/todo');
-const validateObjectId = require('../middlewares/validateObjectId');
-const { authenticate } = require('../middlewares/authenticate');
+const { Todo } = require("../models/todo");
+const validateObjectId = require("../middlewares/validateObjectId");
+const { authenticate } = require("../middlewares/authenticate");
 
-router.post('/', authenticate, async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   try {
     const todo = new Todo({
       text: req.body.text,
@@ -24,7 +24,7 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-router.get('/', authenticate, async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const todos = await Todo.find({ _creator: req.user._id });
     res.send({ todos });
@@ -33,7 +33,7 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-router.get('/:id', [authenticate, validateObjectId], async (req, res) => {
+router.get("/:id", [authenticate, validateObjectId], async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findOne({ _id: id, _creator: req.user._id });
@@ -45,7 +45,7 @@ router.get('/:id', [authenticate, validateObjectId], async (req, res) => {
     }
     res.send({
       success: true,
-      message: 'Todo fetched successfully',
+      message: "Todo fetched successfully",
       data: todo,
     });
   } catch (err) {
@@ -53,7 +53,7 @@ router.get('/:id', [authenticate, validateObjectId], async (req, res) => {
   }
 });
 
-router.delete('/:id', [authenticate, validateObjectId], async (req, res) => {
+router.delete("/:id", [authenticate, validateObjectId], async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findOneAndDelete({
@@ -70,7 +70,7 @@ router.delete('/:id', [authenticate, validateObjectId], async (req, res) => {
 
     res.send({
       success: true,
-      message: 'Todo deleted successfully',
+      message: "Todo deleted successfully",
       data: todo,
     });
   } catch (err) {
@@ -78,10 +78,10 @@ router.delete('/:id', [authenticate, validateObjectId], async (req, res) => {
   }
 });
 
-router.patch('/:id', [authenticate, validateObjectId], async (req, res) => {
+router.patch("/:id", [authenticate, validateObjectId], async (req, res) => {
   try {
     const { id } = req.params;
-    const body = _.pick(req.body, ['text', 'completed']);
+    const body = _.pick(req.body, ["text", "completed"]);
 
     if (_.isBoolean(body.completed) && body.completed) {
       body.completedAt = new Date().getTime();
@@ -105,7 +105,7 @@ router.patch('/:id', [authenticate, validateObjectId], async (req, res) => {
 
     res.send({
       success: true,
-      message: 'Todo updated successfully',
+      message: "Todo updated successfully",
       data: todo,
     });
   } catch (err) {
