@@ -8,5 +8,9 @@
     "PORT": 3000,
     "MONGODB_URI": "mongodb://localhost:27017/TodoApp",
     "JWT_SECRET": "aiudsanskn954jnfs.dvsuohwe"
+  },
+  "production": {
+    "MONGODB_URI": "mongodb+srv://shola:shola@shola-bioku.aais2.mongodb.net/TodoAppProd?retryWrites=true&w=majority",
+    "JWT_SECRET": "aiudsanskn954jnfs.dvsuohwe"
   }
 }
