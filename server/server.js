@@ -8,11 +8,13 @@ const xss = require("xss-clean");
 const bodyParser = require("body-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 
-const { mongoose } = require("./db/mongoose");
+const connectDB = require("./db/mongoose");
 const todos = require("./routes/todos");
 const users = require("./routes/users");
 
 const app = express();
+
+connectDB();
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
