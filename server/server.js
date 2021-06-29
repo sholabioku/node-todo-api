@@ -30,7 +30,7 @@ app.use("/users", users);
 
 const port = process.env.PORT;
 app.listen(port, () =>
-  console.log(`Started server up on port ${port}`.cyan.bold.underline)
+  console.log(`Started server up on port ${port}`.yellow.bold)
 );
 
 module.exports = { app };
