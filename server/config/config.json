@@ -6,7 +6,7 @@
   },
   "development": {
     "PORT": 3000,
-    "MONGODB_URI": "mongodb://localhost:27017/TodoApp",
+    "MONGODB_URI": "mongodb+srv://shola:shola@shola-bioku.aais2.mongodb.net/TodoApp?retryWrites=true&w=majority",
     "JWT_SECRET": "aiudsanskn954jnfs.dvsuohwe"
   }
 }
